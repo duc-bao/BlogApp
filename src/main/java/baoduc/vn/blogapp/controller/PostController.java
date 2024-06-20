@@ -1,6 +1,7 @@
 package baoduc.vn.blogapp.controller;
 
 import baoduc.vn.blogapp.entity.Post;
+import baoduc.vn.blogapp.playload.PostDto;
 import baoduc.vn.blogapp.service.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,11 +16,11 @@ public class PostController {
     @Autowired
     private PostService postService;
     @PostMapping("/posts")
-    public ResponseEntity<Post> createPost(@RequestBody Post post){
+    public ResponseEntity<PostDto> createPost(@RequestBody PostDto post){
         return new ResponseEntity<>(postService.createPost(post), HttpStatus.CREATED);
     }
     @GetMapping("/getall")
-    public List<Post> getAllPost(){
+    public List<PostDto> getAllPost(){
         return  postService.findAllPost();
     }
 

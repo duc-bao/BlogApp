@@ -19,14 +19,14 @@ public class PostServiceImpl implements  PostService{
     @Autowired
     private PostRepository postRepository;
     @Override
-    public Post createPost(Post post) {
+    public PostDto createPost(PostDto post) {
         Post newPost  = postRepository.save(convertDTOtoEntity(post));
-        Post post2 = convertEntityintoDTO(newPost);
+        PostDto post2 = convertEntityintoDTO(newPost);
         return  post2;
     }
 
     @Override
-    public List<Post> findAllPost() {
+    public List<PostDto> findAllPost() {
         List<Post> postList = postRepository.findAll();
         return  postList.stream().map(post -> convertEntityintoDTO(post)).collect(Collectors.toList());
     }
@@ -57,7 +57,7 @@ public class PostServiceImpl implements  PostService{
 //        return postResponse;
 //    }
 
-    private Post convertDTOtoEntity(Post post){
+    private Post convertDTOtoEntity(PostDto post){
         Post post1 = new Post();
         post1.setTitle(post.getTitle());
         post1.setDescription(post.getDescription());
@@ -65,8 +65,8 @@ public class PostServiceImpl implements  PostService{
         return post1;
     }
     // convert entity to DTO
-        private Post convertEntityintoDTO(Post newPost){
-        Post post2 = new Post();
+        private PostDto convertEntityintoDTO(Post newPost){
+        PostDto post2 = new PostDto();
         post2.setId(newPost.getId());
         post2.setTitle(newPost.getTitle());
         post2.setDescription(newPost.getDescription());

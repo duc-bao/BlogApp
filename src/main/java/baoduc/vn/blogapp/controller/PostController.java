@@ -5,6 +5,7 @@ import baoduc.vn.blogapp.playload.PostDto;
 import baoduc.vn.blogapp.playload.PostResponse;
 import baoduc.vn.blogapp.service.post.PostService;
 import baoduc.vn.blogapp.utils.AppContrants;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PostController {
     @Autowired
     private PostService postService;
     @PostMapping("/posts")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto post){
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto post){
         return new ResponseEntity<>(postService.createPost(post), HttpStatus.CREATED);
     }
     @GetMapping("/posts/{postId}")
@@ -34,7 +35,7 @@ public class PostController {
         return  postService.findAllPost(pageNo, pageSize, sortBy,sortDir);
     }
     @PutMapping("/update-post/{id}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable(value = "id") int id, @RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> updatePost(@PathVariable(value = "id") int id,@Valid @RequestBody PostDto postDto){
         return  new ResponseEntity<>(postService.updatePost(postDto,id), HttpStatus.OK);
     }
     @DeleteMapping("/delete-post/{id}")

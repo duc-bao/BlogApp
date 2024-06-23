@@ -2,6 +2,7 @@ package baoduc.vn.blogapp.controller;
 
 import baoduc.vn.blogapp.playload.CommentDto;
 import baoduc.vn.blogapp.service.comment.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentDto> createComment(@PathVariable(value = "postId") int postId, @RequestBody CommentDto commentDto){
+    public ResponseEntity<CommentDto> createComment(@PathVariable(value = "postId") int postId,@Valid @RequestBody CommentDto commentDto){
         return new ResponseEntity<>(commentService.createComment(postId, commentDto), HttpStatus.CREATED);
     }
 
@@ -30,7 +31,7 @@ public class CommentController {
         return new ResponseEntity<>( commentDto, HttpStatus.OK);
     }
     @PutMapping("/posts/{postId}/comments/{commentId}")
-    public  ResponseEntity<CommentDto> updateComment(@PathVariable(value = "postId")int postId, @PathVariable(value = "commentId") int commentId, @RequestBody CommentDto commentDto){
+    public  ResponseEntity<CommentDto> updateComment(@PathVariable(value = "postId")int postId, @PathVariable(value = "commentId") int commentId,@Valid @RequestBody CommentDto commentDto){
         CommentDto commentDto1 = commentService.updateCommentById(postId,commentId,commentDto);
         return  new ResponseEntity<>(commentDto, HttpStatus.OK);
     }

@@ -2,8 +2,10 @@ package baoduc.vn.blogapp.service.post;
 
 import baoduc.vn.blogapp.dao.PostRepository;
 import baoduc.vn.blogapp.entity.Post;
+import baoduc.vn.blogapp.exception.ResourceNotFoundException;
 import baoduc.vn.blogapp.playload.PostDto;
 import baoduc.vn.blogapp.playload.PostResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,12 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements  PostService{
     @Autowired
     private PostRepository postRepository;
+    private final ModelMapper modelMapper;
+
+    public PostServiceImpl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     public PostDto createPost(PostDto post) {
         Post newPost  = postRepository.save(convertDTOtoEntity(post));
@@ -26,9 +34,43 @@ public class PostServiceImpl implements  PostService{
     }
 
     @Override
-    public List<PostDto> findAllPost() {
-        List<Post> postList = postRepository.findAll();
-        return  postList.stream().map(post -> convertEntityintoDTO(post)).collect(Collectors.toList());
+    public PostResponse findAllPost(int pageNo, int pageSize, String sortBy,String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Post> postList = postRepository.findAll(pageable);
+        System.out.println(postList);
+        List<Post> listofPost = postList.getContent();
+
+        List<PostDto> content =  listofPost.stream().map(post -> convertEntityintoDTO(post)).collect(Collectors.toList());
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(postList.getNumber());
+        postResponse.setPageSize(postList.getSize());
+        postResponse.setTotalElements(postList.getTotalElements());
+        postResponse.setLast(postList.isLast());
+        return  postResponse;
+    }
+
+    @Override
+    public PostDto getPostById(int idPost) {
+       Post post = postRepository.findById(idPost).orElseThrow(() -> new ResourceNotFoundException("post", "id", idPost));
+       return  convertEntityintoDTO(post);
+    }
+
+    @Override
+    public PostDto updatePost(PostDto postDto, int id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("post", "id", id));
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setDescription(post.getDescription());
+        Post updatePost = postRepository.save(post);
+        return  convertEntityintoDTO(updatePost);
+    }
+
+    @Override
+    public void deletePost(int id) {
+        Post post = postRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("post", "id", id));
+        postRepository.delete(post);
     }
 
 //    @Override
@@ -58,19 +100,12 @@ public class PostServiceImpl implements  PostService{
 //    }
 
     private Post convertDTOtoEntity(PostDto post){
-        Post post1 = new Post();
-        post1.setTitle(post.getTitle());
-        post1.setDescription(post.getDescription());
-        post1.setContent(post.getContent());
-        return post1;
+      Post post1 = modelMapper.map(post, Post.class);
+      return  post1;
     }
     // convert entity to DTO
         private PostDto convertEntityintoDTO(Post newPost){
-        PostDto post2 = new PostDto();
-        post2.setId(newPost.getId());
-        post2.setTitle(newPost.getTitle());
-        post2.setDescription(newPost.getDescription());
-        post2.setContent(newPost.getContent());
-        return post2;
+        PostDto postDto = modelMapper.map(newPost, PostDto.class);
+        return postDto;
     }
 }

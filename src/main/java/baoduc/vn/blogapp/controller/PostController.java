@@ -22,7 +22,7 @@ public class PostController {
         return new ResponseEntity<>(postService.createPost(post), HttpStatus.CREATED);
     }
     @GetMapping("/posts/{postId}")
-    public  ResponseEntity<PostDto> getById(@PathVariable int idPost){
+    public  ResponseEntity<PostDto> getById(@PathVariable(value = "postId") int idPost){
         return  new ResponseEntity<>(postService.getPostById(idPost), HttpStatus.OK);
     }
     @GetMapping("/getall")

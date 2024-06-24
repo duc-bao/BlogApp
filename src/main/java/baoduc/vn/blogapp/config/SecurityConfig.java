@@ -47,7 +47,9 @@ public class SecurityConfig {
         //Yêu cầu tất cả các yêu cầu HTTP phải được xác thực.
         //Sử dụng Basic Authentication với cấu hình mặc định.
         httpSecurity.csrf().disable().authorizeHttpRequests((authurize) -> authurize.requestMatchers(HttpMethod.GET, "/api/**")
-                        .permitAll().anyRequest().authenticated())
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
     }

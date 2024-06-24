@@ -7,6 +7,7 @@ import baoduc.vn.blogapp.entity.User;
 import baoduc.vn.blogapp.exception.BlogAPIException;
 import baoduc.vn.blogapp.playload.LoginDTO;
 import baoduc.vn.blogapp.playload.RegisterDTO;
+import baoduc.vn.blogapp.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,11 +30,14 @@ public class AuthuServiceImpl implements AuthService{
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
     @Override
     public String login(LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User logged in successfully";
+        String token = jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 
     @Override

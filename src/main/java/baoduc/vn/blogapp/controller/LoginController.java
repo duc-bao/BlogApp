@@ -1,5 +1,6 @@
 package baoduc.vn.blogapp.controller;
 
+import baoduc.vn.blogapp.playload.JWTAuthRespionse;
 import baoduc.vn.blogapp.playload.LoginDTO;
 import baoduc.vn.blogapp.service.login.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ public class LoginController {
     @Autowired
     private AuthService authService;
     @PostMapping( value = {"/login", "/signin"})
-    public ResponseEntity<String> login(@RequestBody     LoginDTO loginDTO){
-        String respon =  authService.login(loginDTO);
-        return  ResponseEntity.ok(respon);
+    public ResponseEntity<JWTAuthRespionse> login(@RequestBody     LoginDTO loginDTO){
+        String token =  authService.login(loginDTO);
+        JWTAuthRespionse jwtAuthRespionse = new JWTAuthRespionse();
+        jwtAuthRespionse.setAccessToken(token);
+
+        return  ResponseEntity.ok(jwtAuthRespionse);
     }
 }

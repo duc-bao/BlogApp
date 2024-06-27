@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     @Autowired
     private AuthService authService;
-    @PostMapping( value = {"/login", "/signin"})
-    public ResponseEntity<JWTAuthRespionse> login(@RequestBody     LoginDTO loginDTO){
+        @PostMapping( value = {"/login", "/signin"})
+    public ResponseEntity<JWTAuthRespionse> login(@RequestBody   LoginDTO loginDTO){
         String token =  authService.login(loginDTO);
         JWTAuthRespionse jwtAuthRespionse = new JWTAuthRespionse();
         jwtAuthRespionse.setAccessToken(token);
-
         return  ResponseEntity.ok(jwtAuthRespionse);
     }
 }

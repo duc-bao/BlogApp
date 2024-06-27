@@ -2,10 +2,15 @@ package baoduc.vn.blogapp.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -24,6 +29,6 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
             ,inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 
 }

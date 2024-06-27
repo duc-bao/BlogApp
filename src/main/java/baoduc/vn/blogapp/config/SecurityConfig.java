@@ -21,16 +21,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(
+        prePostEnabled = true
+)
 public class SecurityConfig {
-    @Autowired
-    private UserDetailsService userDetailsService;
+//    @Autowired
+//    private UserDetailsService userDetailsService;
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder  passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
     // Này để cấu hình xem security sẽ làm những gì
@@ -53,9 +55,10 @@ public class SecurityConfig {
         //Vô hiệu hóa CSRF protection.
         //Yêu cầu tất cả các yêu cầu HTTP phải được xác thực.
         //Sử dụng Basic Authentication với cấu hình mặc định.
-        httpSecurity.csrf().disable().authorizeHttpRequests((authurize) -> authurize.requestMatchers(HttpMethod.GET, "/api/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+        httpSecurity.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authurize) -> authurize
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("USER")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

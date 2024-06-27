@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class RegisterController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
+        @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
       String response =  authService.register(registerDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

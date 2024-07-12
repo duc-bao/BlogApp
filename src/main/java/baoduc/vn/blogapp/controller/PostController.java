@@ -18,7 +18,7 @@ import baoduc.vn.blogapp.utils.AppContrants;
 public class PostController {
     @Autowired
     private PostService postService;
-
+    
     @PostMapping("/posts")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto post) {

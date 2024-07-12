@@ -1,0 +1,29 @@
+version : '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_DATABASE: blogapp
+      MYSQL_USER: ducbao
+      MYSQL_PASSWORD: 2904
+      MYSQL_ROOT_PASSWORD: 2904
+    ports:
+      - 3308:3306
+    volumes:
+      - db:/var/lib/mysql
+
+  app:
+    image: blogapp-image
+    container_name: blog-app-container
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/blogapp
+      SPRING_DATASOURCE_USERNAME: ducbao
+      SPRING_DATASOURCE_PASSWORD: 2904
+    ports:
+      - 8081:8080
+    depends_on:
+      - db
+volumes:
+  app:
+  db:

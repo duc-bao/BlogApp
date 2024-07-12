@@ -1,14 +1,15 @@
 package baoduc.vn.blogapp.playload;
 
+import java.util.Set;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 
-import java.util.Set;
+import lombok.Data;
 
 @Data
 public class PostDto {
-    private long id;
+    private int id;
 
     // title not null or empty
     // title should have at 2 characters
@@ -22,8 +23,8 @@ public class PostDto {
     private String description;
     // content should not be null or empty
     @NotEmpty
-
     private String content;
+
     private Set<CommentDto> comments;
-    private CategoriesDTO categoriesDTO;
+    private int idcategory;
 }

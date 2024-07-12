@@ -2,9 +2,9 @@ package baoduc.vn.blogapp.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class BlogAPIException extends  RuntimeException{
+public class BlogAPIException extends RuntimeException {
     private HttpStatus httpStatus;
-    private  String message;
+    private String message;
 
     public BlogAPIException(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;

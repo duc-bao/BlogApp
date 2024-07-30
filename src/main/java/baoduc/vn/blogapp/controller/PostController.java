@@ -3,6 +3,7 @@ package baoduc.vn.blogapp.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,7 @@ import baoduc.vn.blogapp.utils.AppContrants;
 public class PostController {
     @Autowired
     private PostService postService;
-    
+
     @PostMapping("/posts")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto post) {
@@ -53,4 +54,19 @@ public class PostController {
         postService.deletePost(id);
         return new ResponseEntity<>("Succes", HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<PostResponse> searchPost(
+            @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
+            @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(required = false, value = "search") String... filter) {
+        return postService.search(pageSize, pageNo, sortBy, filter);
+    }
+//    @GetMapping("/search-specification")
+//    public  ResponseEntity<PostResponse> searchPostSpecification(Pageable pageable,
+//                                                                 @RequestParam(required = false) String [] post,
+//                                                                 @RequestParam(required = false) String[] comment){
+//        return postService.searchSpecification(pageable, post, comment);
+//    }
 }
